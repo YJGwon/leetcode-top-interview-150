@@ -5,15 +5,13 @@ class Solution {
     private static final int MAX_VALUE = 100;
 
     public int removeElement(int[] nums, int val) {
-        int k = nums.length;
+        int k = 0;
         for (int i = 0; i < nums.length; i++) {
-            if (nums[i] != val) {
+            if (nums[i] == val) {
                 continue;
             }
-            k--;
-            nums[i] = MAX_VALUE;
+            nums[k++] = nums[i];
         }
-        Arrays.sort(nums);
         return k;
     }
 }
