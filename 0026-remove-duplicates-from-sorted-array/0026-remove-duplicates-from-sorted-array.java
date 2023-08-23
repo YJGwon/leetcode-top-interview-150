@@ -1,16 +1,12 @@
 class Solution {
 
-    private static final int VALUE_OVER_RANGE = 101;
-
     public int removeDuplicates(int[] nums) {
-        int k = 0;
-        int temp = VALUE_OVER_RANGE;
-        for (int num : nums) {
-            if (num == temp) {
+        int k = 1;
+        for (int i = 1; i < nums.length; i++) {
+            if (nums[i - 1] == nums[i]) {
                 continue;
             }
-            temp = num;
-            nums[k++] = num;
+            nums[k++] = nums[i];
         }
         return k;
     }
