@@ -7,12 +7,10 @@ class Solution {
     }
 
     private void flip(int[] arr, int startsAt, int endsAt) {
-        int left = startsAt;
-        int right = endsAt;
-        while (left < right) {
-            int temp = arr[left];
-            arr[left++] = arr[right];
-            arr[right--] = temp;
+        while (startsAt < endsAt) {
+            int temp = arr[startsAt];
+            arr[startsAt++] = arr[endsAt];
+            arr[endsAt--] = temp;
         }
     }
 }
