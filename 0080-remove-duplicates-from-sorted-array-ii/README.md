@@ -1,53 +1,97 @@
-<h2><a href="https://leetcode.com/problems/remove-duplicates-from-sorted-array-ii">80. Remove Duplicates from Sorted Array II</a></h2><h3>Medium</h3><hr><p>Given an integer array <code>nums</code> sorted in <strong>non-decreasing order</strong>, remove some duplicates <a href="https://en.wikipedia.org/wiki/In-place_algorithm" target="_blank"><strong>in-place</strong></a> such that each unique element appears <strong>at most twice</strong>. The <strong>relative order</strong> of the elements should be kept the <strong>same</strong>.</p>
+# **[80. Remove Duplicates from Sorted Array II](https://leetcode.com/problems/remove-duplicates-from-sorted-array-ii/)**
 
-<p>Since it is impossible to change the length of the array in some languages, you must instead have the result be placed in the <strong>first part</strong> of the array <code>nums</code>. More formally, if there are <code>k</code> elements after removing the duplicates, then the first <code>k</code> elements of <code>nums</code>&nbsp;should hold the final result. It does not matter what you leave beyond the first&nbsp;<code>k</code>&nbsp;elements.</p>
+## 문제
 
-<p>Return <code>k</code><em> after placing the final result in the first </em><code>k</code><em> slots of </em><code>nums</code>.</p>
+`non-decreasing order`의 정수 배열 `nums`가 주어질 때, 고유한 원소가 최대 2번 나타나도록 중복을 제거하라. 원소들의 상대적 순서는 유지되어야 한다.
 
-<p>Do <strong>not</strong> allocate extra space for another array. You must do this by <strong>modifying the input array <a href="https://en.wikipedia.org/wiki/In-place_algorithm" target="_blank">in-place</a></strong> with O(1) extra memory.</p>
+결과는 `nums`의 첫 부분에 위치해야 한다. 중복을 제거한 후의 원소 개수가 `k`라면, `nums`의 첫 `k`개가 최종 결과여야 한다. 첫 `k`개 이후의 원소는 중요하지 않다.
 
-<p><strong>Custom Judge:</strong></p>
+최종 결과를 `nums`의 첫 `k`개에 배치한 후 `k`를 return하라.
 
-<p>The judge will test your solution with the following code:</p>
+다른 배열 공간을 할당하지 마라. 입력된 배열을 수정하여 추가 메모리가 `O(1)`이어야 한다.
 
-<pre>
-int[] nums = [...]; // Input array
-int[] expectedNums = [...]; // The expected answer with correct length
+### 제약 사항
 
-int k = removeDuplicates(nums); // Calls your implementation
+- `1 <= nums.length <= 3 * 10^4`
+- `-10^4 <= nums[i] <= 10^4`
+- `nums` 는 `non-decreasing order`로 정렬되어 있음
 
-assert k == expectedNums.length;
-for (int i = 0; i &lt; k; i++) {
-    assert nums[i] == expectedNums[i];
+## 접근
+
+****[26. Remove Duplicates from Sorted Array](https://github.com/YJGwon/leetcode-top-interview-150/tree/main/0026-remove-duplicates-from-sorted-array)****와 거의 흡사한데, 이번엔 최대 2개까지 들어갈 수 있다는 조건이 추가되었다. 즉, 지금까지 같은 값의 원소가 1개만 추가되었다면 앞의 원소와 중복된 값이더라도 결과에 추가해야 한다. 따라서 앞의 원소와 같은 값을 가진 원소가 몇 개 추가되었는지 세는 임시 count 변수를 사용하기로 했다.
+
+```java
+// nums[0]은 항상 유지되기 때문에 이미 추가되었다고 본다
+int 현재까지 결과에 추가된 모든 원소 수 = 1;
+int 현재까지 결과에 추가된 앞의 값과 같은 원소 수 = 1;
+
+for (nums의 두 번째 원소부터 마지막 원소까지) {
+	만약 앞의 원소와 같은데 현재까지 같은 값이 2개 이상 추가되어 있다면 continue;
+	만약 앞의 원소와 다르다면 같은 값 원소 수 1로 초기화, 같다면 1 증가
+	nums[현재까지 추가된 원소 수]에 현재 원소 저장 후 추가된 원소 수 1 증가
 }
-</pre>
+```
 
-<p>If all assertions pass, then your solution will be <strong>accepted</strong>.</p>
+## 구현
 
-<p>&nbsp;</p>
-<p><strong class="example">Example 1:</strong></p>
+```java
+class Solution {
+    public int removeDuplicates(int[] nums) {
+        int k = 1;
+        int tempCount = 1;
+        for (int i = 1; i < nums.length; i++) {
+            if (nums[i - 1] == nums[i] && tempCount >= 2) {
+                continue;
+            }
+            if (nums[i - 1] != nums[i]) {
+                tempCount = 1;
+            } else {
+                tempCount++;
+            }
+            nums[k++] = nums[i];
+        }
+        return k;
+    }
+}
+```
 
-<pre>
-<strong>Input:</strong> nums = [1,1,1,2,2,3]
-<strong>Output:</strong> 5, nums = [1,1,2,2,3,_]
-<strong>Explanation:</strong> Your function should return k = 5, with the first five elements of nums being 1, 1, 2, 2 and 3 respectively.
-It does not matter what you leave beyond the returned k (hence they are underscores).
-</pre>
+****[26. Remove Duplicates from Sorted Array](https://github.com/YJGwon/leetcode-top-interview-150/tree/main/0026-remove-duplicates-from-sorted-array)****와 비슷하게 풀었다.
 
-<p><strong class="example">Example 2:</strong></p>
+## Review
 
-<pre>
-<strong>Input:</strong> nums = [0,0,1,1,1,1,2,3,3]
-<strong>Output:</strong> 7, nums = [0,0,1,1,2,3,3,_,_]
-<strong>Explanation:</strong> Your function should return k = 7, with the first seven elements of nums being 0, 0, 1, 1, 2, 3 and 3 respectively.
-It does not matter what you leave beyond the returned k (hence they are underscores).
-</pre>
+- 시간복잡도: O(N)
+- 공간복잡도: O(1)
 
-<p>&nbsp;</p>
-<p><strong>Constraints:</strong></p>
+공간 복잡도 요구사항도 충족했고 leetcode 제출 결과도 괜찮았지만 tempCount를 사용하지 않는 방식도 있을거라 생각하고 [다른 풀이](https://leetcode.com/problems/remove-duplicates-from-sorted-array-ii/solutions/3921824/simple-easy-100-beats-java-solution/?envType=study-plan-v2&envId=top-interview-150)를 보았다.
 
-<ul>
-	<li><code>1 &lt;= nums.length &lt;= 3 * 10<sup>4</sup></code></li>
-	<li><code>-10<sup>4</sup> &lt;= nums[i] &lt;= 10<sup>4</sup></code></li>
-	<li><code>nums</code> is sorted in <strong>non-decreasing</strong> order.</li>
-</ul>
+```java
+class Solution {
+    public int removeDuplicates(int[] nums) {
+        int k = 2;
+        for (int i = 2; i < nums.length; i++) {
+            if (nums[k - 2] == nums[i]) {
+                continue;
+            }
+            nums[k++] = nums[i];
+        }
+        return k;
+    }
+}
+```
+
+현재 원소의 값이 저장될 위치(`k`)의 앞앞(`-2`) 원소의 값과 같은지만 비교하면 2개 초과 여부를 알 수 있다. 
+
+중복 허용 개수가 바뀌면 다음과 같이 n개의 중복을 허용하는 결과를 구할 수 있다.
+
+```java
+int k = n;
+for (int i = n; i < nums.length; i++) {
+    if (nums[k - n] == nums[i]) {
+        continue;
+    }
+    nums[k++] = nums[i];
+}
+return k;
+```
+
+결국 ****[26. Remove Duplicates from Sorted Array](https://github.com/YJGwon/leetcode-top-interview-150/tree/main/0026-remove-duplicates-from-sorted-array)****와 똑같은 방법으로도 풀 수 있는 문제였다.
