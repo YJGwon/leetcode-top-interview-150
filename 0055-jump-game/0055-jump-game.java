@@ -1,24 +1,13 @@
-import java.util.Queue;
-import java.util.ArrayDeque;
-
 class Solution {
     public boolean canJump(int[] nums) {
-        Queue<Integer> queue = new ArrayDeque<>();
-        boolean[] visited = new boolean[nums.length];
-
-        queue.offer(0);
-        visited[0] = true;
-        while (!queue.isEmpty()) {
-            int now = queue.poll();
-            if (now == nums.length - 1) {
-                return true;
+        int maxReached = 0;
+        for (int i = 0; i < nums.length; i++) {
+            if (maxReached < i) {
+                return false;
             }
-            for (int i = now + 1; i <= Math.min(now + nums[now], nums.length - 1); i++) {
-                if (visited[i]) {
-                    continue;
-                }
-                queue.offer(i);
-                visited[i] = true;
+            maxReached = Math.max(maxReached, i + nums[i]);
+            if (maxReached >= nums.length - 1) {
+                return true;
             }
         }
         return false;
