@@ -1,36 +1,113 @@
-<h2><a href="https://leetcode.com/problems/minimum-size-subarray-sum">209. Minimum Size Subarray Sum</a></h2><h3>Medium</h3><hr><p>Given an array of positive integers <code>nums</code> and a positive integer <code>target</code>, return <em>the <strong>minimal length</strong> of a </em><span data-keyword="subarray-nonempty"><em>subarray</em></span><em> whose sum is greater than or equal to</em> <code>target</code>. If there is no such subarray, return <code>0</code> instead.</p>
+# **[209. Minimum Size Subarray Sum](https://leetcode.com/problems/minimum-size-subarray-sum/)**
 
-<p>&nbsp;</p>
-<p><strong class="example">Example 1:</strong></p>
+## 문제
 
-<pre>
-<strong>Input:</strong> target = 7, nums = [2,3,1,2,4,3]
-<strong>Output:</strong> 2
-<strong>Explanation:</strong> The subarray [4,3] has the minimal length under the problem constraint.
-</pre>
+주어진 양의 정수 배열 `nums`와 양의 정수 `target`에 대해, 합이 `target`보다 크거나 같은 가장 작은  부분 배열의 최소 길이를 return하라. 만약 그런 부분 배열이 없다면, 0을 return하라.
 
-<p><strong class="example">Example 2:</strong></p>
+### 제약 사항
 
-<pre>
-<strong>Input:</strong> target = 4, nums = [1,4,4]
-<strong>Output:</strong> 1
-</pre>
+- `1 <= target <= 10^9`
+- `1 <= nums.length <= 10^5`
+- `1 <= nums[i] <= 10^4`
 
-<p><strong class="example">Example 3:</strong></p>
+## 접근
 
-<pre>
-<strong>Input:</strong> target = 11, nums = [1,1,1,1,1,1,1,1]
-<strong>Output:</strong> 0
-</pre>
+정렬되어 있지 않아 결국 모든 부분 배열을 확인해야 한다. 가변 길이의 sliding window 방식으로 풀 수 있다.
 
-<p>&nbsp;</p>
-<p><strong>Constraints:</strong></p>
+1. 첫 인덱스에 left와 right를 두고, 원소의 합이 target보다 크거나 같아질 때 까지 right를 한 칸씩 늘린다.
+2. 이제 target보다 크거나 같은 동안 left의 값을 늘리면서 원소 하나씩 제외해본다.
+3. target보다 작아졌다면 다시 right를 늘려가며 원소를 추가해본다.
+4. …반복!
 
-<ul>
-	<li><code>1 &lt;= target &lt;= 10<sup>9</sup></code></li>
-	<li><code>1 &lt;= nums.length &lt;= 10<sup>5</sup></code></li>
-	<li><code>1 &lt;= nums[i] &lt;= 10<sup>4</sup></code></li>
-</ul>
+### 의사 코드
 
-<p>&nbsp;</p>
-<strong>Follow up:</strong> If you have figured out the <code>O(n)</code> solution, try coding another solution of which the time complexity is <code>O(n log(n))</code>.
+```java
+int 최소 길이 = nums의 길이 + 1;
+int left = 0;
+int right = 0;
+int sum = 0;
+while (left <= right && right < nums의 길이) {
+	if (sum이 target보다 작다면) {
+		right 증가 후 sum에 right값 더하고 continue;
+	}
+	최소 길이 갱신 후 sum에서 left값 빼고 left 증가
+}
+
+if (최소 길이 == nums의 길이 + 1) {
+	return 0;
+}
+return 최소 길이;
+```
+
+## 구현
+
+```java
+class Solution {
+    public int minSubArrayLen(int target, int[] nums) {
+        int minSubLength = nums.length + 1;
+        int left = 0;
+        int right = 0;
+        int sum = nums[0];
+        while (left <= right) {
+            if (sum < target) {
+                right++;
+                if (right == nums.length) {
+                    break;
+                }
+                sum += nums[right];
+                continue;
+            }
+            minSubLength = Math.min(minSubLength, right - left + 1);
+            sum -= nums[left++];
+        }
+
+        if (minSubLength == nums.length + 1) {
+            return 0;
+        }
+        return minSubLength;
+    }
+}
+```
+
+## Review
+
+- 시간복잡도: O(n)
+- 공간복잡도: O(1)
+
+모든 부분집합을 구하는 것이 아니라 최소 길이만 구하면 되기 때문에 지금까지의 minSubLength보다 작은 길이로 조건을 충족하는 경우만 찾으면 된다. 합이 target보다 작은데 현재 length를 늘렸을 때 minSubLength와 같거나 커진다면 size를 늘려보는 대신 현재의 window size 그대로 한 칸 오른쪽으로 이동하면 된다. 이 아이디어를 바탕으로 아래와 같이 개선해봤다.
+
+```java
+class Solution {
+    public int minSubArrayLen(int target, int[] nums) {
+        int minSubLength = nums.length + 1;
+        int left = 0;
+        int right = 0;
+        int sum = nums[0];
+        while (left <= right) {
+            final int subLength = right - left + 1;
+            if (sum >= target) {
+                minSubLength = Math.min(minSubLength, subLength);
+                sum -= nums[left++];
+                continue;
+            }
+            right++;
+            if (right == nums.length) {
+                break;
+            }
+            sum += nums[right];
+            if (subLength == minSubLength) {
+                sum -= nums[left++];
+            }
+        }
+
+        if (minSubLength == nums.length + 1) {
+            return 0;
+        }
+        return minSubLength;
+    }
+}
+```
+
+sum이 target보다 작아서 right를 이동했을 때, 길이가 현재까지의 최소 길이와 같다면 left도 한 칸 같이 이동해서 현재까지 최소길이보다 작은 경우에 대해서만 탐색을 이어가도록 수정했다.
+
+그리고 sum이 target보다 작을 때의 분기처리가 더 많기 때문에 sum이 target보다 클 때 early return하도록 해서 if문의 depth도 줄였다.
