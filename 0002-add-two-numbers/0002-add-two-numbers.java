@@ -32,14 +32,11 @@ class Solution {
             carry = sum / NEXT_PLACE_VALUE;
         }
 
-        while (carry != 0) {
+        if (carry != 0) {
             final ListNode current = new ListNode();
 
-            current.val = carry % NEXT_PLACE_VALUE;
+            current.val = carry;
             prevNode.next = current;
-            prevNode = current;
-
-            carry /= NEXT_PLACE_VALUE;
 
         }
         return nodeBeforeHead.next;
