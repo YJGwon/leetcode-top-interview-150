@@ -113,3 +113,13 @@ class Solution {
 - 공간복잡도 O(1)
 
 각 자리수를 바로 결정할 수 있다는 생각을 바탕으로 n번만에 해결했다! 다만 마지막 남은 `carry`는 항상 한 자리이기 때문에 남은 `carry`를 처리하는 while문을 if문으로 수정했다.
+
+```java
+if (carry != 0) {
+    final ListNode current = new ListNode();
+
+    current.val = carry;
+    prevNode.next = current;
+
+}
+```
