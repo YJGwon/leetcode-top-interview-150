@@ -9,31 +9,19 @@
  * }
  */
 class Solution {
-    private static final int MAX_INF = 101;
     public ListNode mergeTwoLists(ListNode list1, ListNode list2) {
-        final ListNode beforeHead = new ListNode();
-
-        ListNode currentL1 = list1;
-        ListNode currentL2 = list2;
-        ListNode prevInResult = beforeHead;
-        while (currentL1 != null || currentL2 != null) {
-            if (getValueFrom(currentL1) <= getValueFrom(currentL2)) {
-                prevInResult.next = currentL1;
-                prevInResult = currentL1;
-                currentL1 = currentL1.next;
-                continue;
-            }
-            prevInResult.next = currentL2;
-            prevInResult = currentL2;
-            currentL2 = currentL2.next;
+        if (list1 == null) {
+            return list2;
         }
-        return beforeHead.next;
-    }
-
-    private int getValueFrom(final ListNode node) {
-        if (node == null) {
-            return MAX_INF;
+        if (list2 == null) {
+            return list1;
         }
-        return node.val;
+
+        if (list1.val <= list2.val) {
+            list1.next = mergeTwoLists(list1.next, list2);
+            return list1;
+        }
+        list2.next = mergeTwoLists(list1, list2.next);
+        return list2;
     }
 }
