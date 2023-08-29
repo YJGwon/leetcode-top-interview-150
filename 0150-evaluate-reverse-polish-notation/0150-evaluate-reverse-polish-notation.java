@@ -1,5 +1,3 @@
-import java.util.Deque;
-import java.util.ArrayDeque;
 import java.util.Map;
 import java.util.function.BiFunction;
 
@@ -12,18 +10,26 @@ class Solution {
         "/", (i1, i2) -> i2 / i1
     );
 
+    private String[] tokens;
+    private int pointer;
+
     public int evalRPN(String[] tokens) {
-        final Deque<Integer> operands = new ArrayDeque<>();
-        for (final String token : tokens) {
-            if (OPERATIONS.containsKey(token)) {
-                final BiFunction<Integer, Integer, Integer> operation = OPERATIONS.get(token);
-                final int result = operation.apply(operands.pop(), operands.pop());
-                operands.push(result);
-                continue;
-            }
-            final int operand = Integer.parseInt(token);
-            operands.push(operand);
+        this.tokens = tokens;
+        this.pointer = tokens.length - 1;
+        return evaluate();
+    }
+
+    private int evaluate() {
+        final String token = tokens[pointer];
+        if (!OPERATIONS.containsKey(token)) {
+            pointer--;
+            return Integer.parseInt(token);
         }
-        return operands.pop();
+
+        final BiFunction<Integer, Integer, Integer> operation = OPERATIONS.get(token);
+        pointer--;
+        final int i1 = evaluate();
+        final int l2 = evaluate();
+        return operation.apply(i1, l2);
     }
 }
