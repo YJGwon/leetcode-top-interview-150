@@ -1,42 +1,37 @@
-import java.util.Deque;
-import java.util.ArrayDeque;
-
 class MinStack {
 
-    private final Deque<Integer> values;
-    private final Deque<Integer> minValues;
+    private Node top;
 
     public MinStack() {
-        values = new ArrayDeque<>();
-        minValues = new ArrayDeque<>();
-        minValues.push(Integer.MAX_VALUE);
+        this.top = new Node(Integer.MAX_VALUE, Integer.MAX_VALUE, null);
     }
     
     public void push(int val) {
-        values.push(val);
-        int min = Math.min(minValues.peek(), val);
-        minValues.push(min);
+        int min = Math.min(top.min, val);
+        top = new Node(val, min, top);
     }
     
     public void pop() {
-        values.pop();
-        minValues.pop();
+        top = top.prev;
     }
     
     public int top() {
-        return values.peek();
+        return top.value;
     }
     
     public int getMin() {
-        return minValues.peek();
+        return top.min;
+    }
+
+    private static class Node {
+        int value;
+        int min;
+        Node prev;
+
+        Node(int value, int min, Node prev) {
+            this.value = value;
+            this.min = min;
+            this.prev = prev;
+        }
     }
 }
-
-/**
- * Your MinStack object will be instantiated and called as such:
- * MinStack obj = new MinStack();
- * obj.push(val);
- * obj.pop();
- * int param_3 = obj.top();
- * int param_4 = obj.getMin();
- */
