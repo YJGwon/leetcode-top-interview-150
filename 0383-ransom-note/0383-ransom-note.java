@@ -10,15 +10,11 @@ class Solution {
         }
 
         for (char c : ransomNote.toCharArray()) {
-            if (!characterCounts.containsKey(c)) {
+            final int count = characterCounts.getOrDefault(c, 0);
+            if (count == 0) {
                 return false;
             }
-            final int count = characterCounts.get(c) - 1;
-            if (count < 0) {
-                return false;
-            } else {
-                characterCounts.put(c, count);
-            }
+            characterCounts.put(c, count - 1);
         }
         return true;
     }
