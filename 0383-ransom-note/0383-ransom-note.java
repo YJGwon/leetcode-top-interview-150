@@ -1,20 +1,18 @@
-import java.util.Map;
-import java.util.HashMap;
-
 class Solution {
+
+    private static final int NUMBERS_OF_ALPHABETS = 26;
+
     public boolean canConstruct(String ransomNote, String magazine) {
-        final Map<Character, Integer> characterCounts = new HashMap<>();
+        final int[] charactercounts = new int[NUMBERS_OF_ALPHABETS];
         for (char c : magazine.toCharArray()) {
-            final int prevCount = characterCounts.getOrDefault(c, 0);
-            characterCounts.put(c, prevCount + 1);
+            charactercounts[c - 'a']++;
         }
 
         for (char c : ransomNote.toCharArray()) {
-            final int count = characterCounts.getOrDefault(c, 0);
-            if (count == 0) {
+            if (charactercounts[c - 'a'] == 0) {
                 return false;
             }
-            characterCounts.put(c, count - 1);
+            charactercounts[c - 'a']--;
         }
         return true;
     }
