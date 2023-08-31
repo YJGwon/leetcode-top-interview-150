@@ -14,8 +14,8 @@ class Solution {
                 return false;
             }
             final int count = characterCounts.get(c) - 1;
-            if (count == 0) {
-                characterCounts.remove(c);
+            if (count < 0) {
+                return false;
             } else {
                 characterCounts.put(c, count);
             }
