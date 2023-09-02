@@ -15,23 +15,17 @@ class Solution {
             return head;
         }
 
-        final ListNode partition = head.next;
-        head.next = null;
-
-        final ListNode[] partitions = new ListNode[2];
-        partitions[0] = head;
-        partitions[1] = partition;
-
-        int index = 1;
-        while(partitions[index].next != null) {
-            final ListNode prev = partitions[index];
-            index = (index + 1) % partitions.length;
-            partitions[index].next = prev.next;
-            prev.next = null;
-            partitions[index] = partitions[index].next;
+        ListNode hare = head;
+        ListNode turtle = head;
+        ListNode prevOfTurtle = null;
+        while (hare != null && hare.next != null) {
+            hare = hare.next.next;
+            prevOfTurtle = turtle;
+            turtle = turtle.next;
         }
+        prevOfTurtle.next = null;
 
-        return merge(sortList(head), sortList(partition));
+        return merge(sortList(head), sortList(turtle));
     }
 
     private ListNode merge(ListNode partition1, ListNode partition2) {
