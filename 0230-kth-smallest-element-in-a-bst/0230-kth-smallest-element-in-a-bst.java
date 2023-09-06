@@ -35,9 +35,6 @@ class Solution {
             answer = root.val;
             return;
         }
-        if (k < 0) {
-            return;
-        }
 
         if (root.right != null) {
             dfs(root.right);
