@@ -22,8 +22,8 @@ class Solution {
         }
 
         List<Double> answers = new ArrayList<>();
-        Queue<LeveledNode> queue = new ArrayDeque<>();
-        queue.offer(new LeveledNode(root, 0));
+        Queue<TreeNode> queue = new ArrayDeque<>();
+        queue.offer(root);
 
         while(!queue.isEmpty()) {
 
@@ -31,15 +31,15 @@ class Solution {
             double count = queue.size();
 
             for (int i = 0; i < count; i++) {
-                LeveledNode now = queue.poll();
-                sum += now.node.val;
+                TreeNode now = queue.poll();
+                sum += now.val;
 
-                if (now.node.left != null) {
-                    queue.offer(new LeveledNode(now.node.left, now.level + 1));
+                if (now.left != null) {
+                    queue.offer(now.left);
                 }
 
-                if (now.node.right != null) {
-                    queue.offer(new LeveledNode(now.node.right, now.level + 1));
+                if (now.right != null) {
+                    queue.offer(now.right);
                 }
             }
 
@@ -48,15 +48,5 @@ class Solution {
         }
 
         return answers;
-    }
-
-    private static class LeveledNode {
-        TreeNode node;
-        int level;
-
-        LeveledNode(TreeNode node, int level) {
-            this.node = node;
-            this.level = level;
-        }
     }
 }
