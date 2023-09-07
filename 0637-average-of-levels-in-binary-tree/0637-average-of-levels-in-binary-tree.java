@@ -26,32 +26,29 @@ class Solution {
         queue.offer(new LeveledNode(root, 0));
 
         int level = 0;
-        double sum = 0;
-        double count = 0;
         while(!queue.isEmpty()) {
-            LeveledNode now = queue.poll();
-            if (level != now.level) {
-                double avg = Math.floor((sum / count) * 1_000_000) / 1_000_000;
-                answers.add(avg);
-                level = now.level;
-                sum = 0;
-                count = 0;
+
+            double sum = 0;
+            double count = 0;
+
+            while(!queue.isEmpty() && queue.peek().level == level) {
+                LeveledNode now = queue.poll();
+                sum += now.node.val;
+                count++;
+
+                if (now.node.left != null) {
+                    queue.offer(new LeveledNode(now.node.left, now.level + 1));
+                }
+
+                if (now.node.right != null) {
+                    queue.offer(new LeveledNode(now.node.right, now.level + 1));
+                }
             }
 
-            sum += now.node.val;
-            count++;
-
-            if (now.node.left != null) {
-                queue.offer(new LeveledNode(now.node.left, now.level + 1));
-            }
-
-            if (now.node.right != null) {
-                queue.offer(new LeveledNode(now.node.right, now.level + 1));
-            }
+            double avg = Math.floor(sum / count * 1_000_000) / 1_000_000;
+            answers.add(avg);
+            level++;
         }
-
-        double avg = Math.floor((sum / count) * 1_000_000) / 1_000_000;
-        answers.add(avg);
 
         return answers;
     }
