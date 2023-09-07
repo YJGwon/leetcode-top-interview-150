@@ -28,7 +28,7 @@ class Solution {
         while(!queue.isEmpty()) {
 
             double sum = 0;
-            double count = queue.size();
+            int count = queue.size();
 
             for (int i = 0; i < count; i++) {
                 TreeNode now = queue.poll();
@@ -43,7 +43,7 @@ class Solution {
                 }
             }
 
-            double avg = Math.floor(sum / count * 1_000_000) / 1_000_000;
+            double avg = sum / count;
             answers.add(avg);
         }
 
