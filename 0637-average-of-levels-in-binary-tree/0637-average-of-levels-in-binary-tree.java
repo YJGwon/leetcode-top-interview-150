@@ -25,16 +25,14 @@ class Solution {
         Queue<LeveledNode> queue = new ArrayDeque<>();
         queue.offer(new LeveledNode(root, 0));
 
-        int level = 0;
         while(!queue.isEmpty()) {
 
             double sum = 0;
-            double count = 0;
+            double count = queue.size();
 
-            while(!queue.isEmpty() && queue.peek().level == level) {
+            for (int i = 0; i < count; i++) {
                 LeveledNode now = queue.poll();
                 sum += now.node.val;
-                count++;
 
                 if (now.node.left != null) {
                     queue.offer(new LeveledNode(now.node.left, now.level + 1));
@@ -47,7 +45,6 @@ class Solution {
 
             double avg = Math.floor(sum / count * 1_000_000) / 1_000_000;
             answers.add(avg);
-            level++;
         }
 
         return answers;
