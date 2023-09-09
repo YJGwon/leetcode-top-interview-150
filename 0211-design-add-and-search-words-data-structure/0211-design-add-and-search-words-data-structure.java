@@ -27,34 +27,29 @@ class WordDictionary {
     }
     
     public boolean search(String word) {
-        Queue<Node> matched = new ArrayDeque<>();
-        matched.offer(root);
-        for (char c : word.toCharArray()) {
-            int n = matched.size();
-            for (int i = 0; i < n; i++) {
-                Node parent = matched.poll();
-                if (c == WILDCARD) {
-                    matched.addAll(parent.getAllChildren());
-                    continue;
-                }
+        return search(word, 0, root);
+    }
 
-                if (!parent.contains(c)) {
-                    continue;
-                }
-
-                matched.offer(parent.getChild(c));
-            }
-            if (matched.isEmpty()) {
-                return false;
-            }
+    private boolean search(String word, int depth, Node parent) {
+        if (depth == word.length()) {
+            return parent.isEnd;
         }
 
-        while (!matched.isEmpty()) {
-            if (matched.poll().isEnd) {
-                return true;
+        char c = word.charAt(depth);
+        if (c == WILDCARD) {
+            for (Node child : parent.getAllChildren()) {
+                if (search(word, depth + 1, child)) {
+                    return true;
+                }
             }
+            return false;
         }
-        return false;
+
+        if (!parent.contains(c)) {
+            return false;
+        }
+
+        return search(word, depth + 1, parent.getChild(c));
     }
 
     private static class Node {
