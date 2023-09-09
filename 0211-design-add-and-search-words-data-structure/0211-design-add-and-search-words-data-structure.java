@@ -1,3 +1,6 @@
+import java.util.Arrays;
+import java.util.Set;
+
 class WordDictionary {
 
     private static final char WILDCARD = '.';
@@ -32,10 +35,7 @@ class WordDictionary {
 
         char c = word.charAt(depth);
         if (c == WILDCARD) {
-            for (Node child : parent.getChildren()) {
-                if (child == null) {
-                    continue;
-                }
+            for (Node child : parent.getAllChildren()) {
                 if (search(word, depth + 1, child)) {
                     return true;
                 }
@@ -75,8 +75,10 @@ class WordDictionary {
             return children[getIndex(c)];
         }
 
-        Node[] getChildren() {
-            return children;
+        List<Node> getAllChildren() {
+            return Arrays.stream(children)
+                        .filter(child -> child != null)
+                        .collect(Collectors.toList());
         }
 
         int getIndex(char c) {
