@@ -32,10 +32,6 @@ class Solution {
     }
 
     private Node deepCopy(final Node node) {
-        if (copiedNodes.containsKey(node.val)) {
-            return copiedNodes.get(node.val);
-        }
-
         final Node copiedNode = new Node(node.val);
         copiedNodes.put(node.val, copiedNode);
 
