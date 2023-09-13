@@ -41,7 +41,7 @@ class Solution {
 
         final List<Node> copiedNeighbors = node.neighbors.stream()
             .map(neighbor -> deepCopy(neighbor))
-            .collect(Collectors.toList());
+            .toList();
         copiedNode.neighbors = copiedNeighbors;
 
         return copiedNode;
