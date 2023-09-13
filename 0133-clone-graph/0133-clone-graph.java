@@ -39,9 +39,14 @@ class Solution {
         final Node copiedNode = new Node(node.val);
         copiedNodes.put(node.val, copiedNode);
 
-        final List<Node> copiedNeighbors = node.neighbors.stream()
-            .map(neighbor -> deepCopy(neighbor))
-            .toList();
+        final List<Node> copiedNeighbors = new ArrayList<>();
+        for (Node neighbor : node.neighbors) {
+            if (copiedNodes.containsKey(neighbor.val)) {
+                copiedNeighbors.add(copiedNodes.get(neighbor.val));
+                continue;
+            }
+            copiedNeighbors.add(deepCopy(neighbor));
+        }
         copiedNode.neighbors = copiedNeighbors;
 
         return copiedNode;
