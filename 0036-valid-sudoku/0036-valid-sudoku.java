@@ -1,37 +1,45 @@
 class Solution {
-    public boolean isValidSudoku(char[][] board) {
-        boolean[][] existsInRow = new boolean[9][9]; // [rowIndex][num]
-        boolean[][] existsInCol = new boolean[9][9]; // [colIndex][num]
-        boolean[][] existsInBox = new boolean[9][9]; // [boxIndex][num]
 
-        for (int r = 0; r < 9; r++) {
-            for (int c = 0; c < 9; c++) {
+    private static final int SIZE = 9;
+
+    private static final int DIGITS_COUNT = 9;
+    private static final int MIN_DIGIT = 1;
+
+    private static final int BOX_PER_ROW = 3;
+    private static final int BOX_PER_COL = 3;
+
+    public boolean isValidSudoku(char[][] board) {
+        final boolean[][] existsInRow = new boolean[SIZE][DIGITS_COUNT]; // [rowIndex][digit]
+        final boolean[][] existsInCol = new boolean[SIZE][DIGITS_COUNT]; // [colIndex][digit]
+        final boolean[][] existsInBox = new boolean[SIZE][DIGITS_COUNT]; // [boxIndex][digit]
+
+        for (int r = 0; r < SIZE; r++) {
+            for (int c = 0; c < SIZE; c++) {
                 if (board[r][c] == '.') {
                     continue;
                 }
 
-                int n = Character.getNumericValue(board[r][c]) - 1;
-                if (existsInRow[r][n]) {
+                final int digit = Character.getNumericValue(board[r][c]) - MIN_DIGIT;
+                if (existsInRow[r][digit]) {
                     return false;
                 }
-                existsInRow[r][n] = true;
+                if (existsInCol[c][digit]) {
+                    return false;
+                }
+                final int boxIndex = toBoxIndex(r, c);
+                if (existsInBox[boxIndex][digit]) {
+                    return false;
+                }
 
-                if (existsInCol[c][n]) {
-                    return false;
-                }
-                existsInCol[c][n] = true;
-
-                int boxIndex = toBoxIndex(r, c);
-                if (existsInBox[boxIndex][n]) {
-                    return false;
-                }
-                existsInBox[boxIndex][n] = true;
+                existsInRow[r][digit] = true;
+                existsInCol[c][digit] = true;
+                existsInBox[boxIndex][digit] = true;
             }
         }
         return true;
     }
 
-    private int toBoxIndex(int r, int c) {
-        return (r / 3 * 3) + (c / 3);
+    private int toBoxIndex(final int r, final int c) {
+        return (r / BOX_PER_ROW * BOX_PER_COL) + (c / BOX_PER_COL);
     }
 }
